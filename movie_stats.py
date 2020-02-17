@@ -1,18 +1,23 @@
 import json
 import requests
+import sys
 
 
 def main():
     """Prompt the user, make the request and print results"""
-    with open('key.json', 'r') as key_file:
-        api_key = json.load(key_file).get('API_KEY')
+    try:
+        with open('key.json', 'r') as key_file:
+            api_key = json.load(key_file).get('API_KEY')
+    except IOError:
+        print('Key file does not exist!')
+        sys.exit(1)
     print('Hello and welcome!')
     while True:
         user_response = input(
             '\nPlease enter the title of the movie you are looking for (or enter q to quit): ').strip()
         if user_response == 'q':
             print('Goodbye!')
-            exit()
+            sys.exit(0)
         data_dict = get_data(user_response, api_key)
         if data_dict.get('Response') == 'False':
             print(data_dict.get('Error'))
